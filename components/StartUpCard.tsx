@@ -3,8 +3,11 @@ import {formatDate} from "@/lib/utils";
 import {EyeIcon} from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/button";
+import {Author,Startup} from "@/sanity/types";
 
-const StartUpCard = (post) => {
+export type StartUpCard = Omit<Startup, "author"> & {author? : Author}
+
+const StartUpCard = (post: StartUpCard) => {
     const {_createdAt, views, author, title, category, _id, image, description} = post;
     return (
         <li className="border-4 border-black shadow-lg rounded-xl p-4 lg:w-1/3">
@@ -29,7 +32,7 @@ const StartUpCard = (post) => {
                             <p>{category}</p>
                         </Link>
                         <Button>
-                            <Link href={`/startup/${_id}}`}>
+                            <Link href={`/startup/${_id}`}>
                                 Details
                             </Link>
                         </Button>

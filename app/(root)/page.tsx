@@ -1,21 +1,14 @@
 import SearchForm from "@/components/SearchForm";
 import StartUpCard from "@/components/StartUpCard";
+import {STARTUPS_QUERY} from "@/sanity/lib/queries";
+import {sanityFetch, SanityLive} from "@/sanity/lib/live";
 
 export default async function Home( {searchParams}: {
     searchParams: Promise<{query? : string }> }) {
     const query = (await searchParams).query
+    const params = {search: query || null}
 
-    const posts = [
-        {
-            _createdAt : new Date().toISOString(),
-            views : 55,
-            author : {_id : 1, name : "Said ARSLAN"},
-            description : "This is a description",
-            category : "Robots",
-            title : "We robots",
-            _id : 1
-        }
-    ]
+        const {data : posts} = await sanityFetch({query : STARTUPS_QUERY, params})
 
     return (
         <>
@@ -30,10 +23,10 @@ export default async function Home( {searchParams}: {
                 <p className="mt-4 text-4xl font-extrabold ml-4">
                     {query ? `Search results for "${query}"` : 'All Startups'}
                 </p>
-                <ul className="mt-7 px-6 flex flex-col md:flex-row flex-wrap">
+                <ul className="mt-7 px-6 flex flex-col md:flex-row flex-wrap gap-4">
                     {
                         posts?.length > 0 ? (
-                            posts.map((post, index) => {
+                            posts.map((post: StartUpCard, index: number) => {
                                 return <StartUpCard key={index} {...post} />
                             })
                         ) : (
@@ -42,6 +35,7 @@ export default async function Home( {searchParams}: {
                     }
                 </ul>
           </section>
+            <SanityLive />
         </>
 
     );
